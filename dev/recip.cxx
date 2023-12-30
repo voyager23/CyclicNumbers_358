@@ -1,5 +1,5 @@
 /*
- * construct.cxx
+ * recip.cxx
  * 
  * Copyright 2023 Mike <mike@fedora38-2.home>
  * 
@@ -18,37 +18,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * Using Wikipedia construct
- * base = 10
- * prime = various > 5
+ * 
  */
 
 
 #include <iostream>
 #include <cstdint>
-#include <cmath>
+#include <vector>
 
 using namespace std;
-using u64=uint64_t;
+
+bool MillerRabin(uint64_t n);
 
 int main(int argc, char **argv)
 {
-	const u64 base = 10;	// base
-	u64 p = 17;				// prime
+	uint64_t n,p,r,d,t,sum=0;
 	
-	u64 t = 0;
-	u64 r = 1;
-	u64 digit,x,n = 0;
-	do {
-		t += 1;
-		x = r * base;
-		digit = (x / p);
-		cout << "d:" << digit << "  ";
-		r = x % p;
-		n = n*base + digit;
-		cout << "n:" << n << endl;		
-	} while(r != 1);
+	//p = 725163167;
 	
+	//vector<uint_64> p = {725158747	725158757	725158853	725158871	725158901	725158909	725158937	725158961	725158963	725158999};
+	p = 1019;
+	
+	// Given p, establish the correct value for n.
+	//~ n = p;
+	//~ t = 1;
+	//~ do{
+		//~ n /= 10;
+		//~ t *= 10;
+	//~ }while(n>1);
+	//~ cout << "t:" << t << endl;
+	if(MillerRabin(p)) {
+		cout << "p = " << p << " 1/p = " << double(1.0/double(p)) << endl;
+		n = 10;
+		t = 1;
+		while(1){
+		r = n % p;
+		d = n / p;
+		// cout << d << " ";
+		sum += d;
+		if((r == 1)&&(t > 1)) break;
+		n = r*10;
+		t++;
+		}
+		cout << "t=" << t << " sum=" << sum << endl;
+		if(t = (p-1)) {
+			cout << "cyclic number." << endl;
+		}
+	}
 	return 0;
 }
 
