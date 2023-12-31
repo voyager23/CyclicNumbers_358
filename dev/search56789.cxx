@@ -35,48 +35,45 @@ bool MillerRabin(uint64_t n);
 int main(int argc, char **argv)
 {
 	uint64_t n,p,r,d,t,sum=0;
-	queue<uint64_t> q;
 	
-	//p = 725163167;
-	//p = 72516;
+	// Construct a vector of primes to search, 725163167 -> 729927007 inclusive.
+	//  vp(size)=233193
+	vector<uint64_t> vp;
+	for(uint64_t n = 725163167; n != 729927009; n += 2) if(MillerRabin(n)) vp.push_back(n);
+	cout << "vp(size)=" << vp.size() << endl;
 	
-	vector<uint64_t> vp = {725158747,725158757,725158853,725158871,725158901,725158909,725158937,725158961,725158963,725158999};
-	// p = 1033;
+	//~ vp = {27,47,53,59};
 	
-	// Given p, establish the correct value for n.
-	//~ n = p;
-	//~ t = 1;
-	//~ do{
-		//~ n /= 10;
-		//~ t *= 10;
-	//~ }while(n>1);
-	//~ cout << "t:" << t << endl;
 	for(uint64_t p : vp){
+		queue<uint64_t> q;
 		for(uint64_t x = 0; x != 5; ++x) q.push(0);
-		cout << "p = " << p << " 1/p = " << double(1.0/double(p)) << endl;
+		cout << "\np = " << p << " ";
 		n = 10;
 		t = 1;
 		while(1){
-		r = n % p;
-		d = n / p;
-		//cout << d << " ";
-		sum += d;
-		q.pop();
-		q.push(d);
-		if((r == 1)&&(t > 1)) break;
-		n = r*10;
-		t++;
-		}
-		cout << "t = " << t << " sum=" << sum << endl;
-		
-		//~ if(t = (p-1)) {
-			//~ cout << "cyclic number." << endl;
-		//~ }
-		while(!q.empty()){
-			cout << q.front() << " ";
+			r = n % p;
+			d = n / p;
+			// cout << d << ":" << r << "  ";
+			sum += d;
 			q.pop();
+			q.push(d);
+
+			n = r*10;
+			if(r == 1) break;
+			t++;
 		}
-		cout << endl;
+		
+		cout << "t = " << t << " sum=" << sum;
+		
+		if(t == (p-1)) {
+			cout << "  Cyclic number ending ";
+			while(!q.empty()){
+				cout << q.front() << " ";
+				q.pop();
+			}
+			//cout << endl;
+		}
+	
 	}
 
 	return 0;
