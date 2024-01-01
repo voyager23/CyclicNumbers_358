@@ -1,5 +1,5 @@
 /*
- * recip.cxx
+ * primes56789.cxx
  * 
  * Copyright 2023 Mike <mike@fedora38-2.home>
  * 
@@ -35,45 +35,54 @@ bool MillerRabin(uint64_t n);
 int main(int argc, char **argv)
 {
 	uint64_t n,p,r,d,t,sum=0;
+	// x-check array
+	array<uint64_t,5>check;
+	for(uint64_t x = 0; x != 5; ++x) check[x]=x+5;
 	
 	// Construct a vector of primes to search, 725163167 -> 729927007 inclusive.
 	//  vp(size)=233193
 	vector<uint64_t> vp;
-	for(uint64_t n = 725163167; n != 729927009; n += 2) if(MillerRabin(n)) vp.push_back(n);
+	for(uint64_t n = 725209891; n != 729909891; n += 100000) if(MillerRabin(n)) vp.push_back(n);
 	cout << "vp(size)=" << vp.size() << endl;
 	
-	//~ vp = {27,47,53,59};
-	
+	vp = {729809891};
 	for(uint64_t p : vp){
-		//if((p % 100000)!= 9891) continue;
-		if (((p*56789) % 100000) != 99999) continue;
+		sum=0;
 		queue<uint64_t> q;
 		for(uint64_t x = 0; x != 5; ++x) q.push(0);
-		cout << "\np = " << p << " ";
 		n = 10;
 		t = 1;
 		while(1){
 			r = n % p;
 			d = n / p;
-			// cout << d << ":" << r << "  ";
+			//cout << d << ":" << r << "  ";
 			sum += d;
 			q.pop();
 			q.push(d);
-
 			n = r*10;
 			if(r == 1) break;
 			t++;
 		}
 		
-		cout << "t = " << t << " sum=" << sum;
+		//cout << "\np = " << p << " t = " << t << " sum=" << sum << "\t";
 		
 		if(t == (p-1)) {
-			cout << "  Cyclic number ending ";
+			
+			array<uint64_t,5> ending;
+			array<uint64_t,5>::iterator i = ending.begin();
 			while(!q.empty()){
-				cout << q.front() << " ";
+				*(i++) = q.front();
 				q.pop();
 			}
-			//cout << endl;
+			//~ for(auto x : check) cout<<x;
+			//~ cout << "  ";
+			//~ for(auto x : ending) cout<<x;
+			//~ cout << endl;
+			if(ending==check){
+				cout << "Prime: "<< p <<  " cyclic number ending 56789" << endl;
+				cout << "Digit sum = " << sum << endl;
+			}
+			
 		}
 	
 	}
